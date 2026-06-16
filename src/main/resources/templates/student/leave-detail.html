@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white fw-bold">
+                    📋 Leave Request Detail
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Leave Type</th>
+                            <td th:text="${leave.leaveType.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>From Date</th>
+                            <td th:text="${leave.fromDate}"></td>
+                        </tr>
+                        <tr>
+                            <th>To Date</th>
+                            <td th:text="${leave.toDate}"></td>
+                        </tr>
+                        <tr>
+                            <th>Total Days</th>
+                            <td th:text="${leave.numberOfDays}"></td>
+                        </tr>
+                        <tr>
+                            <th>Reason</th>
+                            <td th:text="${leave.reason}"></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                  <span th:text="${leave.status}"
+                        th:classappend="${leave.status.name() == 'APPROVED'} ? 'badge bg-success' :
+                                        (${leave.status.name() == 'REJECTED'} ? 'badge bg-danger' :
+                                         'badge bg-warning text-dark')">
+                  </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Applied On</th>
+                            <td th:text="${#temporals.format(leave.appliedOn,'dd-MM-yyyy HH:mm')}"></td>
+                        </tr>
+                        <tr th:if="${leave.reviewedBy != null}">
+                            <th>Reviewed By</th>
+                            <td th:text="${leave.reviewedBy.name}"></td>
+                        </tr>
+                        <tr th:if="${leave.remarks != null}">
+                            <th>Remarks</th>
+                            <td th:text="${leave.remarks}"></td>
+                        </tr>
+                    </table>
+
+                    <a th:href="@{/student/dashboard}"
+                       class="btn btn-outline-primary">← Back to Dashboard</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

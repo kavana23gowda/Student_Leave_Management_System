@@ -1,0 +1,43 @@
+/* General */
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Stat cards */
+.card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Tables */
+.table th {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+}
+
+/* Badge fix */
+.badge {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}

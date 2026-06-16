@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">👥 Manage Users</h5>
+        <div class="d-flex gap-2">
+            <a th:href="@{/admin/students/add}"
+               class="btn btn-primary btn-sm">➕ Add Student</a>
+            <a th:href="@{/admin/counsellors/add}"
+               class="btn btn-secondary btn-sm">➕ Add Counsellor</a>
+            <form th:action="@{/admin/students/auto-assign}"
+                  method="post" style="display:inline">
+                <button type="submit" class="btn btn-info btn-sm text-white"
+                        onclick="return confirm('Auto assign students?')">
+                    🔄 Auto Assign
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${success}"
+         class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Students Table -->
+    <h6 class="text-primary fw-bold mt-3">👨‍🎓 Students</h6>
+    <div class="card shadow mb-4">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-primary">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>USN</th>
+                    <th>Department</th>
+                    <th>Academic Year</th>
+                    <th>Counsellor</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(students)}">
+                    <td colspan="8"
+                        class="text-center text-muted py-3">
+                        No students added yet.
+                    </td>
+                </tr>
+                <tr th:each="s, i : ${students}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${s.name}"></td>
+                    <td th:text="${s.usn}"></td>
+                    <td th:text="${s.department}"></td>
+                    <td th:text="${s.academicYear}"></td>
+                    <td th:text="${s.counsellor != null ?
+                             s.counsellor.name : 'Not Assigned'}">
+                    </td>
+                    <td>
+                <span th:text="${s.active ? 'Active' : 'Inactive'}"
+                      th:class="${s.active} ?
+                                 'badge bg-success' :
+                                 'badge bg-secondary'">
+                </span>
+                    </td>
+                    <td>
+                        <form th:if="${s.active}"
+                              th:action="@{/admin/users/{id}/deactivate
+                                  (id=${s.id})}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Deactivate?')">
+                                Deactivate
+                            </button>
+                        </form>
+                        <form th:if="${!s.active}"
+                              th:action="@{/admin/users/{id}/activate
+                                  (id=${s.id})}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-sm btn-success">
+                                Activate
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Counsellors Table -->
+    <h6 class="text-secondary fw-bold">👨‍🏫 Counsellors</h6>
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-secondary">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Employee ID</th>
+                    <th>Department</th>
+                    <th>Students Assigned</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(counsellors)}">
+                    <td colspan="7"
+                        class="text-center text-muted py-3">
+                        No counsellors added yet.
+                    </td>
+                </tr>
+                <tr th:each="c, i : ${counsellors}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${c.name}"></td>
+                    <td th:text="${c.employeeId}"></td>
+                    <td th:text="${c.department}"></td>
+                    <td th:text="${c.studentsCount != null ?
+                             c.studentsCount : 0}">
+                    </td>
+                    <td>
+                <span th:text="${c.active ? 'Active' : 'Inactive'}"
+                      th:class="${c.active} ?
+                                 'badge bg-success' :
+                                 'badge bg-secondary'">
+                </span>
+                    </td>
+                    <td>
+                        <form th:if="${c.active}"
+                              th:action="@{/admin/users/{id}/deactivate
+                                  (id=${c.id})}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Deactivate?')">
+                                Deactivate
+                            </button>
+                        </form>
+                        <form th:if="${!c.active}"
+                              th:action="@{/admin/users/{id}/activate
+                                  (id=${c.id})}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-sm btn-success">
+                                Activate
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Counsellor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h4 class="fw-bold mb-0">
+                Welcome, <span th:text="${counsellor.name}"></span> 👋
+            </h4>
+            <small class="text-muted">
+                Employee ID: <span th:text="${counsellor.employeeId}"></span>
+            </small>
+        </div>
+    </div>
+
+    <!-- Flash -->
+    <div th:if="${success}"
+         class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow text-center p-3">
+                <h2 class="fw-bold" th:text="${pendingCount}">0</h2>
+                <p class="mb-0">⏳ Pending Requests</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary shadow text-center p-3">
+                <h2 class="fw-bold" th:text="${myStudents.size()}">0</h2>
+                <p class="mb-0">👨‍🎓 My Students</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Leaves -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-warning text-dark fw-bold">
+            ⏳ Pending Leave Requests
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Student Name</th>
+                    <th>USN</th>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Days</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(pendingLeaves)}">
+                    <td colspan="8" class="text-center text-muted py-4">
+                        No pending requests 🎉
+                    </td>
+                </tr>
+                <tr th:each="leave, i : ${pendingLeaves}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${leave.student.name}"></td>
+                    <td th:text="${leave.student.usn}"></td>
+                    <td th:text="${leave.leaveType.name}"></td>
+                    <td th:text="${leave.fromDate}"></td>
+                    <td th:text="${leave.toDate}"></td>
+                    <td th:text="${leave.numberOfDays}"></td>
+                    <td>
+                        <a th:href="@{/counsellor/leave/{id}(id=${leave.id})}"
+                           class="btn btn-sm btn-primary">Review</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- All Leaves -->
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white fw-bold">
+            📋 All Leave Requests
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>USN</th>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(allLeaves)}">
+                    <td colspan="8" class="text-center text-muted py-4">
+                        No leave requests yet.
+                    </td>
+                </tr>
+                <tr th:each="leave, i : ${allLeaves}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${leave.student.name}"></td>
+                    <td th:text="${leave.student.usn}"></td>
+                    <td th:text="${leave.leaveType.name}"></td>
+                    <td th:text="${leave.fromDate}"></td>
+                    <td th:text="${leave.toDate}"></td>
+                    <td>
+                <span th:text="${leave.status}"
+                      th:class="${leave.status.name() == 'APPROVED'} ?
+                                 'badge bg-success' :
+                                 (${leave.status.name() == 'REJECTED'} ?
+                                  'badge bg-danger' :
+                                  'badge bg-warning text-dark')">
+                </span>
+                    </td>
+                    <td>
+                        <a th:href="@{/counsellor/leave/{id}(id=${leave.id})}"
+                           class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
